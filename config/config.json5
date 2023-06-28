@@ -1,0 +1,7 @@
+{
+    // Enables the use of the mod.
+    "enabled": true,
+
+    // Enables verbose logging.
+    "debug": false,
+}
