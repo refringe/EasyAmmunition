@@ -1,7 +1,7 @@
 This is a mod for Single Player Tarkov.  
 https://www.sp-tarkov.com
 
-Adjust the background colours of ammunition based on their penetration values to make them easier to identify at a glance. This is a simple server-based modification inspired by the [Faupi - Munitions Expert](https://hub.sp-tarkov.com/files/file/554-faupi-munitions-expert/) mod. Because this version doesn't include any client-side code, it's much easier to maintain as SPT updates are released.
+This mod is a streamlined server-side adaptation inspired by [Faupi - Munitions Expert](https://hub.sp-tarkov.com/files/file/554-faupi-munitions-expert/)​. The core concept of this mod is to assign background colours to ammunition items based on their penetration values. By focusing solely on this feature, and writing unique code for it, the mod avoids the need for additional client-side alterations. Additionally, this minimalist approach ensures that the mod remains compatible with SPT for longer without requiring updates every time the game client is updated.
 
 **Before:**  
 ![Before Mod](https://github.com/refringe/EasyAmmunition/blob/master/images/Before.png?raw=true)
