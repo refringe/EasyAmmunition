@@ -1,34 +1,68 @@
+import type { ITemplateItem } from "@spt-aki/models/eft/common/tables/ITemplateItem";
 import type { IPostDBLoadMod } from "@spt-aki/models/external/IPostDBLoadMod";
 import type { ILogger } from "@spt-aki/models/spt/utils/ILogger";
 import type { DatabaseServer } from "@spt-aki/servers/DatabaseServer";
-import type { ITemplateItem } from "@spt-aki/models/eft/common/tables/ITemplateItem";
 import { DependencyContainer } from "tsyringe";
+
+const validBackgroundColors = [
+    "black",
+    "blue",
+    "default",
+    "green",
+    "orange",
+    "red",
+    "tracerGreen",
+    "tracerRed",
+    "tracerYellow",
+    "violet",
+    "yellow"
+] as const;
+
+type BackgroundColor = typeof validBackgroundColors[number];
+
+type PenetrationConfig = {
+    minPenetration: number,
+    backgroundColor: BackgroundColor
+};
+
+type Configuration = {
+    enabled: boolean,
+    debug: boolean,
+    penetration: PenetrationConfig[]
+};
+
+const AMMO_PARENT_NAME = "Ammo";
+const BULLET_TYPE = "bullet";
+const BUCKSHOT_TYPE = "buckshot";
 
 class EasyAmmunition implements IPostDBLoadMod
 {
-    private config:any;
-    private container:DependencyContainer;
-    private logger:ILogger;
+    private config: Configuration;
+    private container: DependencyContainer;
+    private logger: ILogger;
     private debug = false;
 
-    public postDBLoad(container: DependencyContainer):void
+    public postDBLoad(container: DependencyContainer): void
     {
-        require("json5/lib/register");
-        this.config = require("../config/config.json5");
-
         this.container = container;
-
-        // Get the logger from the server container.
         this.logger = this.container.resolve<ILogger>("WinstonLogger");
 
-        // Check to see if the mod is enabled.
+        try
+        {
+            this.loadConfiguration();
+        }
+        catch (error)
+        {
+            this.logger.log("EasyAmmunition: Error loading configuration. " + error.message + " No changes made.", "red");
+            return;
+        }
+
         if (!this.config.enabled)
         {
             this.logger.log("EasyAmmunition is disabled in the config file.", "red");
             return;
         }
 
-        // We loud?
         this.debug = this.config.debug;
 
         // Engage!
@@ -36,80 +70,117 @@ class EasyAmmunition implements IPostDBLoadMod
     }
 
     /**
+     * Loads the configuration file.
+     */
+    private loadConfiguration(): void
+    {
+        require("json5/lib/register");
+        this.config = require("../config/config.json5");
+        
+        // Validate the configuration and throw an error if invalid.
+        const validationError = this.validateConfiguration(this.config);
+        if (validationError)
+            throw new Error(validationError);
+    }
+
+    /**
+     * Validates the structure of the configuration object.
+     */
+    private validateConfiguration(config: any): string | null
+    {
+        if (!config || typeof config !== "object")
+            return "Configuration is not an object.";
+    
+        if (!Array.isArray(config.penetration) || config.penetration.length === 0)
+            return "Configuration validation error: 'penetration' property should be a non-empty array.";
+    
+        let prevMinPenetration = Infinity;
+        for (const penetrationConfig of config.penetration)
+        {
+            if (typeof penetrationConfig.minPenetration !== "number" || penetrationConfig.minPenetration < 0)
+                return "Configuration validation error: 'minPenetration' must be a number greater than or equal to 0.";
+
+            if (penetrationConfig.minPenetration > prevMinPenetration)
+                return "Configuration validation error: 'penetration' array should be sorted in descending order based on 'minPenetration'.";
+            prevMinPenetration = penetrationConfig.minPenetration;
+
+            if (!this.isValidBackgroundColor(penetrationConfig.backgroundColor))
+                return `Configuration validation error: '${penetrationConfig.backgroundColor}' is not a valid background color.`;
+        }
+    
+        return null; // No errors
+    }
+
+    /**
+     * Checks if the given color is a valid background color.
+     */
+    private isValidBackgroundColor(color: string): color is BackgroundColor
+    {
+        return validBackgroundColors.includes(color as BackgroundColor);
+    }
+
+    /**
      * Generates custom raid times based on a number of configuration values.
      */
-    private adjustAmmunition():void
+    private adjustAmmunition(): void
     {
-        // Get the database tables.
-        const items:Record<string, ITemplateItem> = this.container.resolve<DatabaseServer>("DatabaseServer").getTables().templates.items;
+        const items: Record<string, ITemplateItem> = this.container.resolve<DatabaseServer>("DatabaseServer").getTables().templates.items;
 
         // Get the parent ammo ID.
-        let parentAmmoId = "";
-        for (const item in items)
-        {
-            if (items[item]._name === "Ammo")
-            {
-                parentAmmoId = items[item]._id;
-                break;
-            }
-        }
-
-        // Check to see if the parent ammo ID was found.
-        if (!parentAmmoId.length)
+        const parentAmmo = Object.values(items).find(item => item._name === AMMO_PARENT_NAME);
+        if (!parentAmmo)
         {
             this.logger.log("EasyAmmunition: Parent ammo ID not found. Something has gone terribly wrong. No changes made.", "red");
             return;
         }
 
         if (this.debug)
-            this.logger.log(`EasyAmmunition: Parent ammo ID found: ${parentAmmoId}.`, "gray");
+            this.logger.log(`EasyAmmunition: Parent ammo ID found: ${parentAmmo._id}.`, "gray");
 
         // Keep a count of the number of changes we make.
         let changeCount = 0;
 
-        for (const item in items)
+        for (const item of Object.values(items))
         {
-            // Is this item a child of the ammo parent?
-            if (items[item]._parent === parentAmmoId)
-            {
-                // Does this item have all of the required properties to make a determination?
-                if (
-                    Object.prototype.hasOwnProperty.call(items[item]._props, "ammoType") &&
-                    Object.prototype.hasOwnProperty.call(items[item]._props, "PenetrationPower") &&
-                    Object.prototype.hasOwnProperty.call(items[item]._props, "BackgroundColor") &&
-                    !items[item]._name.startsWith("shrapnel") && // Shrapnel is a special case that we should ignore.
-                    (
-                        // Ignore grenades as well.
-                        items[item]._props.ammoType === "bullet" ||
-                        items[item]._props.ammoType === "buckshot"
-                    )
+            if (
+                item._parent === parentAmmo._id &&
+                item._props?.ammoType &&
+                item._props?.PenetrationPower &&
+                item._props?.BackgroundColor &&
+                !item._name.startsWith("shrapnel") &&
+                (
+                    item._props.ammoType === BULLET_TYPE ||
+                    item._props.ammoType === BUCKSHOT_TYPE
                 )
-                {
-                    // As a general rule, we'll set the background colour based on the penetration value.
-                    // Every 10 points of additional penetration will be a new colour, starting at 20 pen (class 2 armour).
-                    const penetration:number = items[item]._props.PenetrationPower;
-                    if (penetration > 60)
-                        items[item]._props.BackgroundColor = "red";
-                    else if (penetration > 50)
-                        items[item]._props.BackgroundColor = "yellow";
-                    else if (penetration > 40)
-                        items[item]._props.BackgroundColor = "violet";
-                    else if (penetration > 30)
-                        items[item]._props.BackgroundColor = "blue";
-                    else if (penetration > 20)
-                        items[item]._props.BackgroundColor = "green";
-                    else
-                        items[item]._props.BackgroundColor = "grey";
+            )
+            {
+                const penetration:number = item._props.PenetrationPower;
+                item._props.BackgroundColor = this.resolveBackgroundColour(penetration, this.config.penetration);
 
-                    if (this.debug)
-                        this.logger.log(`EasyAmmunition: Ammo ${items[item]._name} has pen value of ${penetration}. Set background colour to ${items[item]._props.BackgroundColor}.`, "gray");
+                if (this.debug)
+                    this.logger.log(`EasyAmmunition: Ammo ${item._name} has pen value of ${penetration}. Set background colour to ${item._props.BackgroundColor}.`, "gray");
 
-                    changeCount++;
-                }
+                changeCount++;
             }
         }
 
         this.logger.log(`EasyAmmunition: Adjusted the background color of ${changeCount} types of ammunition.`, "cyan");
+    }
+    
+    /**
+     * Resolves the background color for the given penetration value based on the provided.
+     */
+    private resolveBackgroundColour(penetration: number, configuration: PenetrationConfig[]): string
+    {
+        // Iterate through each penetration range in the configuration
+        for (const config of configuration)
+        {
+            // Check if the given penetration value falls within this range
+            if (penetration >= config.minPenetration)
+                return config.backgroundColor;
+        }
+
+        return "default";
     }
 }
 

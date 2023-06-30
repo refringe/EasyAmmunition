@@ -3,5 +3,50 @@
     "enabled": true,
 
     // Enables verbose logging.
+    // Currently shows each type of ammo, its penetration value, and the background colour it was assigned.
     "debug": false,
+
+    // Define background colours based on penetration values.
+    //
+    // There are 11 available background colours:
+    // black, blue, default, green, orange, red, tracerGreen, tracerRed, tracerYellow, violet, yellow
+    //
+    // Here's what they look like:
+    // https://raw.githubusercontent.com/refringe/EasyAmmunition/master/images/BackgroundColours.png
+    //
+    // ORDER MATTERS! The penetration values must be in descending order (highest to lowest).
+    //
+    // You're free to add or remove penetration levels/colours as you'd like.
+    "penetration": [
+        {
+            // if penetration above 60
+            "minPenetration": 60,
+            "backgroundColor": "red"
+        },
+        {
+            // if penetration 50-59
+            "minPenetration": 50,
+            "backgroundColor": "yellow"
+        },
+        {
+            // if penetration 40-49
+            "minPenetration": 40,
+            "backgroundColor": "violet"
+        },
+        {
+            // if penetration 30-39
+            "minPenetration": 30,
+            "backgroundColor": "blue"
+        },
+        {
+            // if penetration 20-30
+            "minPenetration": 20,
+            "backgroundColor": "green"
+        },
+        {
+            // if penetration below 20
+            "minPenetration": 0,
+            "backgroundColor": "black"
+        }
+    ]
 }
