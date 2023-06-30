@@ -6,7 +6,7 @@ This mod is a streamlined server-side adaptation inspired by [Faupi - Munitions 
 **Vanilla:**  
 ![Before Mod](https://raw.githubusercontent.com/refringe/EasyAmmunition/master/images/Before.png)
 
-**Easy Ammunition Default*:**  
+**Easy Ammunition Default\*:**  
 ![After Mod](https://raw.githubusercontent.com/refringe/EasyAmmunition/master/images/After.png)
 
 _* Background colours and penetration values can be adjusted._
