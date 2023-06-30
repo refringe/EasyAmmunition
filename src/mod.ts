@@ -180,7 +180,7 @@ class EasyAmmunition implements IPostDBLoadMod
                 return config.backgroundColor;
         }
 
-        return "default";
+        return "black";
     }
 }
 
