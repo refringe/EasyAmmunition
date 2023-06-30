@@ -120,7 +120,7 @@ class EasyAmmunition implements IPostDBLoadMod
     }
 
     /**
-     * Generates custom raid times based on a number of configuration values.
+     * Adjusts the background colour of all ammunition in the database.
      */
     private adjustAmmunition(): void
     {
@@ -168,7 +168,7 @@ class EasyAmmunition implements IPostDBLoadMod
     }
     
     /**
-     * Resolves the background color for the given penetration value based on the provided.
+     * Resolves the background color for the given penetration value based on the provided configuration.
      */
     private resolveBackgroundColour(penetration: number, configuration: PenetrationConfig[]): string
     {
