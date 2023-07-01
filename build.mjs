@@ -1,98 +1,165 @@
 #!/usr/bin/env node
 
-import fs from 'fs-extra';
-import os from 'os';
-import path from 'path';
-import glob from 'glob';
-import archiver from 'archiver';
+import fs from "fs";
+import os from "os";
+import path from "path";
+import archiver from "archiver";
 
-const distDir = 'dist';
-const ignoreArray = [
-    "node_modules/*",
-    "!node_modules/json5/",
-    "src/**/*.js",
-    "types/",
-    "images/",
-    ".git/",
-    ".gitea/",
-    ".github/",
-    ".nvmrc",
+const ignore = [
+    ".git",
+    ".github",
+    ".gitlab",
+    "dist",
+    "images",
+    "types",
+    ".DS_Store",
     ".eslintignore",
     ".eslintrc.json",
     ".gitignore",
-    ".DS_Store",
+    ".nvmrc",
     "build.mjs",
     "mod.code-workspace",
     "package-lock.json",
     "tsconfig.json"
 ];
 
-// Load the contents of the package.json file and build project package name
-async function getProjectPackageName() {
-    console.log("Loading package.json...");
-    const packageJson = await fs.readJson('package.json');
-    const { author, name, version } = packageJson;
-    console.log(`Package info - Author: ${author}, Name: ${name}, Version: ${version}`);
+const allowedSubdirectories = {
+    "node_modules": ["json5"]
+};
 
-    const projectName = `${author}-${name}-${version}`.replace(/[^a-z0-9]/gi, '').toLowerCase();
-    console.log(`Project package name: ${projectName}`);
-    return projectName;
+async function loadPackageJson(currentDir)
+{
+    const packageJsonPath = path.join(currentDir, "package.json");
+    const packageJsonContent = await fs.promises.readFile(packageJsonPath, "utf-8");
+    return JSON.parse(packageJsonContent);
 }
 
-// Check if a "dist" directory exists, if it does, remove it and create a new one.
-async function prepareDistDirectory() {
-    console.log("Preparing 'dist' directory...");
-    if (await fs.pathExists(distDir)) {
-        console.log("Removing existing 'dist' directory...");
-        await fs.remove(distDir);
+function createProjectName(packageJson)
+{
+    const author = packageJson.author.replace(/\W/g, "").toLowerCase();
+    const name = packageJson.name.replace(/\W/g, "").toLowerCase();
+    const version = packageJson.version;
+    return `${author}-${name}-${version}`;
+}
+
+async function createTemporaryDirectoryWithProjectName(projectName)
+{
+    const tempDir = await fs.promises.mkdtemp(path.join(os.tmpdir(), "my-build-"));
+    const projectDir = path.join(tempDir, projectName);
+    await fs.promises.mkdir(projectDir);
+    return projectDir;
+}
+
+async function copyFiles(srcDir, destDir)
+{
+    try
+    {
+        const entries = await fs.promises.readdir(srcDir, { withFileTypes: true });
+
+        for (const entry of entries)
+        {
+            const srcPath = path.join(srcDir, entry.name);
+            const destPath = path.join(destDir, entry.name);
+
+            if (ignore.includes(entry.name))
+            {
+                console.log(`Ignoring: ${entry.name}`);
+                continue;
+            }
+
+            if (entry.isDirectory())
+            {
+                const parentDirName = path.basename(srcDir);
+
+                if (parentDirName === "node_modules" && !allowedSubdirectories[parentDirName]?.includes(entry.name))
+                {
+                    console.log(`Ignoring: ${entry.name}`);
+                    continue;
+                }
+
+                await fs.promises.mkdir(destPath);
+                await copyFiles(srcPath, destPath);
+            }
+            else
+            {
+                // Ignore files that are directly within the allowedSubdirectories
+                if (Object.keys(allowedSubdirectories).includes(path.basename(srcDir))) {
+                    console.log(`Ignoring: ${entry.name}`);
+                    continue;
+                }
+
+                await fs.promises.copyFile(srcPath, destPath);
+                console.log(`Copied: ${srcPath} to ${destPath}`);
+            }
+        }
     }
-    console.log("Creating 'dist' directory...");
-    await fs.mkdir(distDir);
-}
-
-// Copy all files from the current directory to the "dist" directory excluding specified files/folders
-async function copyFilesToDist(ignoreArray) {
-    console.log("Copying files to 'dist' directory...");
-    const files = glob.sync('**', { ignore: ignoreArray, nodir: true });
-
-    for (const file of files) {
-        const destination = path.join(distDir, file);
-        await fs.copy(file, destination);
+    catch (err)
+    {
+        console.error("Error copying files:", err);
     }
 }
 
-// Compress the files in the "dist" directory into a zip file with maximum compression.
-async function compressDistDirectory(projectName) {
-    console.log("Compressing 'dist' directory...");
-    const archivePath = path.join(os.tmpdir(), `${projectName}.zip`);
-    const archive = archiver('zip', { zlib: { level: 9 } });
+async function createZipFile(directoryToZip, zipFilePath)
+{
+    return new Promise((resolve, reject) =>
+    {
+        const output = fs.createWriteStream(zipFilePath);
+        const archive = archiver("zip", {
+            zlib: { level: 9 } // Sets the compression level.
+        });
 
-    const output = fs.createWriteStream(archivePath);
-    archive.pipe(output);
+        output.on("close", function()
+        {
+            console.log("Archiver has been finalized and the output file descriptor has closed.");
+            resolve();
+        });
 
-    archive.directory(distDir, projectName);
+        archive.on("error", function(err)
+        {
+            reject(err);
+        });
 
-    await archive.finalize();
-
-    console.log(`'dist' directory compressed to ${archivePath}`);
-    return archivePath;
+        archive.pipe(output);
+        archive.directory(directoryToZip, false);
+        archive.finalize();
+    });
 }
 
-// Main function to execute the build process
-async function main() {
-    try {
-        const projectName = await getProjectPackageName();
+async function cleanAndCreateDistDirectory(projectDir)
+{
+    const distPath = path.join(projectDir, "dist");
+    await fs.promises.rm(distPath, { force: true, recursive: true });
 
-        await prepareDistDirectory();
-
-        await copyFilesToDist(ignoreArray);
-
-        const archivePath = await compressDistDirectory(projectName);
-
-        console.log(`Build complete. Archive created at ${archivePath}`);
-    } catch (error) {
-        console.error(`Error during build: ${error}`);
-    }
+    await fs.promises.mkdir(distPath);
+    return distPath;
 }
 
-main();
+// Entry point
+(async () =>
+{
+    const currentDir = path.dirname(new URL(import.meta.url).pathname);
+    const packageJson = await loadPackageJson(currentDir);
+    const projectName = createProjectName(packageJson);
+    const projectDir = await createTemporaryDirectoryWithProjectName(projectName);
+
+    console.log(`Temporary directory with project name created at: ${projectDir}`);
+
+    await copyFiles(currentDir, projectDir);
+    console.log("Files copied successfully!");
+
+    const zipFilePath = path.join(os.tmpdir(), `${projectName}.zip`);
+    await createZipFile(projectDir, zipFilePath);
+    console.log(`Zip file created at: ${zipFilePath}`);
+
+    const zipFileInProjectDir = path.join(projectDir, `${projectName}.zip`);
+    await fs.promises.rename(zipFilePath, zipFileInProjectDir);
+    console.log(`Zip file moved to: ${zipFileInProjectDir}`);
+
+    const distDir = await cleanAndCreateDistDirectory(currentDir);
+    await copyFiles(projectDir, path.join(distDir));    
+
+    // Clean up temporary directory
+    await fs.promises.rm(projectDir, { force: true, recursive: true });
+
+    console.log("Script completed successfully.");
+})();
