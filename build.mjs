@@ -24,9 +24,11 @@ const ignore = [
     "tsconfig.json"
 ];
 
+/* eslint-disable @typescript-eslint/naming-convention */
 const allowedSubdirectories = {
     "node_modules": ["json5"]
 };
+/* eslint-enable @typescript-eslint/naming-convention */
 
 const logLevels = {
     error: 0,
@@ -48,7 +50,8 @@ const logger = winston.createLogger({
     levels: logLevels,
     format: winston.format.combine(
         winston.format.colorize(),
-        winston.format.printf(info => {
+        winston.format.printf(info => 
+        {
             return `${info.level}: ${info.message}`;
         })
     ),
@@ -59,7 +62,8 @@ const logger = winston.createLogger({
     ]
 });
 
-async function main() {
+async function main() 
+{
     const currentDir = getCurrentDirectory();
 
     const packageJson = await loadPackageJson(currentDir);
@@ -97,24 +101,28 @@ async function main() {
     logger.log("warn", "You look great today!");
 }
 
-function getCurrentDirectory() {
+function getCurrentDirectory() 
+{
     return path.dirname(new URL(import.meta.url).pathname);
 }
 
-async function loadPackageJson(currentDir) {
+async function loadPackageJson(currentDir) 
+{
     const packageJsonPath = path.join(currentDir, "package.json");
     const packageJsonContent = await fs.promises.readFile(packageJsonPath, "utf-8");
     return JSON.parse(packageJsonContent);
 }
 
-function createProjectName(packageJson) {
+function createProjectName(packageJson) 
+{
     const author = packageJson.author.replace(/\W/g, "").toLowerCase();
     const name = packageJson.name.replace(/\W/g, "").toLowerCase();
     const version = packageJson.version;
     return `${author}-${name}-${version}`;
 }
 
-async function cleanAndCreateDistDirectory(projectDir) {
+async function cleanAndCreateDistDirectory(projectDir) 
+{
     const distPath = path.join(projectDir, "dist");
     await fs.promises.rm(distPath, { force: true, recursive: true });
 
@@ -122,47 +130,61 @@ async function cleanAndCreateDistDirectory(projectDir) {
     return distPath;
 }
 
-async function createTemporaryDirectoryWithProjectName(projectName) {
+async function createTemporaryDirectoryWithProjectName(projectName) 
+{
     const tempDir = await fs.promises.mkdtemp(path.join(os.tmpdir(), "spt-mod-build-"));
     const projectDir = path.join(tempDir, projectName);
     await fs.promises.mkdir(projectDir);
     return projectDir;
 }
 
-async function copyFiles(srcDir, destDir) {
-    try {
+async function copyFiles(srcDir, destDir) 
+{
+    try 
+    {
         const entries = await fs.promises.readdir(srcDir, { withFileTypes: true });
 
-        for (const entry of entries) {
+        for (const entry of entries) 
+        {
             const srcPath = path.join(srcDir, entry.name);
             const destPath = path.join(destDir, entry.name);
 
-            if (shouldIgnore(entry, srcDir)) {
+            if (shouldIgnore(entry, srcDir)) 
+            {
                 logger.log("info", `Ignored: ${srcPath}`);
                 continue;
             }
 
-            if (entry.isDirectory()) {
+            if (entry.isDirectory()) 
+            {
                 await fs.promises.mkdir(destPath);
                 await copyFiles(srcPath, destPath);
-            } else {
+            }
+            else 
+            {
                 await fs.promises.copyFile(srcPath, destPath);
                 logger.log("info", `Copied: ${srcPath}`);
             }
         }
-    } catch (err) {
+    }
+    catch (err) 
+    {
         logger.log("error", "Error copying files: " + err);
     }
 }
 
-function shouldIgnore(entry, srcDir) {
-    if (ignore.includes(entry.name)) {
+function shouldIgnore(entry, srcDir) 
+{
+    if (ignore.includes(entry.name)) 
+    {
         return true;
     }
 
     const parentDirName = path.basename(srcDir);
-    if (Object.keys(allowedSubdirectories).includes(parentDirName)) {
-        if (allowedSubdirectories[parentDirName].includes(entry.name)) {
+    if (Object.keys(allowedSubdirectories).includes(parentDirName)) 
+    {
+        if (allowedSubdirectories[parentDirName].includes(entry.name)) 
+        {
             return false;
         }
         return true;
@@ -171,27 +193,35 @@ function shouldIgnore(entry, srcDir) {
     return false;
 }
 
-async function createZipFile(directoryToZip, zipFilePath) {
-    return new Promise((resolve, reject) => {
+async function createZipFile(directoryToZip, zipFilePath) 
+{
+    return new Promise((resolve, reject) => 
+    {
         const output = fs.createWriteStream(zipFilePath);
         const archive = archiver("zip", {
             zlib: { level: 9 } // Sets the compression level.
         });
 
-        output.on("close", function () {
+        output.on("close", function () 
+        {
             logger.log("info", "Archiver has finalized. The output and the file descriptor have closed.");
             resolve();
         });
 
-        archive.on("warning", function(err) {
-            if (err.code === "ENOENT") {
+        archive.on("warning", function(err) 
+        {
+            if (err.code === "ENOENT") 
+            {
                 logger.log("warn", `Archiver issued a warning: ${err.code} - ${err.message}`);
-            } else {
+            }
+            else 
+            {
                 reject(err);
             }
         });
 
-        archive.on("error", function (err) {
+        archive.on("error", function (err) 
+        {
             reject(err);
         });
 
@@ -202,6 +232,7 @@ async function createZipFile(directoryToZip, zipFilePath) {
 }
 
 // Entry point
-main().catch(err => {
+main().catch(err => 
+{
     logger.log("error", "An error occurred: " + err);
 });
