@@ -76,5 +76,13 @@
         "allowArgumentsExplicitlyTypedAsAny": true
       }
     ]
-  }
+  },
+  "overrides": [
+    {
+      "files": ["build.mjs"],
+      "env": {
+        "node": true
+      }
+    }
+  ]
 }
