@@ -6,30 +6,6 @@ import path from "path";
 import archiver from "archiver";
 import winston from "winston";
 
-const ignore = [
-    ".git",
-    ".github",
-    ".gitlab",
-    "dist",
-    "images",
-    "types",
-    ".DS_Store",
-    ".eslintignore",
-    ".eslintrc.json",
-    ".gitignore",
-    ".nvmrc",
-    "build.mjs",
-    "mod.code-workspace",
-    "package-lock.json",
-    "tsconfig.json"
-];
-
-/* eslint-disable @typescript-eslint/naming-convention */
-const allowedSubdirectories = {
-    "node_modules": ["json5"]
-};
-/* eslint-enable @typescript-eslint/naming-convention */
-
 const logLevels = {
     error: 0,
     warn: 1,
@@ -65,7 +41,8 @@ const logger = winston.createLogger({
 async function main() 
 {
     const currentDir = getCurrentDirectory();
-
+    const buildIgnorePatterns = await loadBuildIgnoreFile(currentDir);
+    
     const packageJson = await loadPackageJson(currentDir);
     const projectName = createProjectName(packageJson);
     logger.log("success", `Project name created: ${projectName}`);
@@ -77,7 +54,7 @@ async function main()
     logger.log("success", `Created temporary working directory: ${projectDir}`);
 
     logger.log("info", "Beginning copy operation...");
-    await copyFiles(currentDir, projectDir);
+    await copyFiles(currentDir, projectDir, buildIgnorePatterns);
     logger.log("success", "Files have been successfully copied to temporary directory.");
 
     logger.log("info", "Beginning folder compression...");
@@ -104,6 +81,21 @@ async function main()
 function getCurrentDirectory() 
 {
     return path.dirname(new URL(import.meta.url).pathname);
+}
+
+async function loadBuildIgnoreFile(currentDir) 
+{
+    const buildIgnorePath = path.join(currentDir, ".buildignore");
+    try 
+    {
+        const fileContent = await fs.promises.readFile(buildIgnorePath, "utf-8");
+        return fileContent.split("\n").filter(pattern => pattern.trim() !== "");
+    }
+    catch (err) 
+    {
+        logger.log("warn", "Failed to read .buildignore file. No files or directories will be ignored.");
+        return [];
+    }
 }
 
 async function loadPackageJson(currentDir) 
@@ -138,7 +130,7 @@ async function createTemporaryDirectoryWithProjectName(projectName)
     return projectDir;
 }
 
-async function copyFiles(srcDir, destDir) 
+async function copyFiles(srcDir, destDir, buildIgnorePatterns) 
 {
     try 
     {
@@ -148,8 +140,9 @@ async function copyFiles(srcDir, destDir)
         {
             const srcPath = path.join(srcDir, entry.name);
             const destPath = path.join(destDir, entry.name);
+            const relativePath = path.relative(process.cwd(), srcPath);
 
-            if (shouldIgnore(entry, srcDir)) 
+            if (isIgnored(relativePath, buildIgnorePatterns)) 
             {
                 logger.log("info", `Ignored: ${srcPath}`);
                 continue;
@@ -158,7 +151,7 @@ async function copyFiles(srcDir, destDir)
             if (entry.isDirectory()) 
             {
                 await fs.promises.mkdir(destPath);
-                await copyFiles(srcPath, destPath);
+                await copyFiles(srcPath, destPath, buildIgnorePatterns);
             }
             else 
             {
@@ -173,24 +166,21 @@ async function copyFiles(srcDir, destDir)
     }
 }
 
-function shouldIgnore(entry, srcDir) 
+function isIgnored(filePath, buildIgnorePatterns) 
 {
-    if (ignore.includes(entry.name)) 
+    let shouldBeIgnored = false;
+    for (const pattern of buildIgnorePatterns) 
     {
-        return true;
-    }
+        const isNegation = pattern.startsWith("!");
+        const regexPattern = isNegation ? pattern.slice(1) : pattern;
+        const regex = new RegExp(regexPattern.replace("*", ".*"));
 
-    const parentDirName = path.basename(srcDir);
-    if (Object.keys(allowedSubdirectories).includes(parentDirName)) 
-    {
-        if (allowedSubdirectories[parentDirName].includes(entry.name)) 
+        if (regex.test(filePath)) 
         {
-            return false;
+            shouldBeIgnored = !isNegation;
         }
-        return true;
     }
-
-    return false;
+    return shouldBeIgnored;
 }
 
 async function createZipFile(directoryToZip, zipFilePath) 
