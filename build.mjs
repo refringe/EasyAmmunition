@@ -81,13 +81,20 @@ async function main() {
     await fs.promises.rm(projectDir, { force: true, recursive: true });
     logger.log('success', 'Cleaned temporary directory.');
 
+    logger.log('success', '------------------------------------');
     logger.log('success', 'Build script completed successfully!');
     logger.log(
         'success',
         "Your mod package has been created in the 'dist' directory:"
     );
-    logger.log('success', path.join(distDir, `${projectName}.zip`));
-    logger.log('warn', 'You look great today!');
+    logger.log(
+        'success',
+        `/${path.relative(
+            process.cwd(),
+            path.join(distDir, `${projectName}.zip`)
+        )}`
+    );
+    logger.log('success', '------------------------------------');
 }
 
 function getCurrentDirectory() {
