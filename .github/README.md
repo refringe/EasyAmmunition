@@ -9,18 +9,19 @@ This mod is a streamlined server-side adaptation inspired by [Faupi - Munitions 
 **Easy Ammunition Default:\***  
 ![After Mod](https://raw.githubusercontent.com/refringe/EasyAmmunition/master/images/After.png)
 
-_* Background colours and penetration values can be adjusted._
+_\* Background colours and penetration values can be adjusted._
 
 Big shout-outs to:
- - [@Faupi](https://hub.sp-tarkov.com/user/3286-faupi/), for the original [Munitions Expert](https://hub.sp-tarkov.com/files/file/348-munitions-expert-ammo-stats-in-inspect-view/) mod.
- - [@CWX](https://hub.sp-tarkov.com/user/12898-cwx/), for keeping Faupi's mod updated in [Faupi - Munitions Expert](https://hub.sp-tarkov.com/files/file/554-faupi-munitions-expert/).
- - [@kikirio](https://hub.sp-tarkov.com/user/3655-kikirio/), for helping integrate this feature into the [Faupi - Munitions Expert](https://hub.sp-tarkov.com/files/file/554-faupi-munitions-expert/) mod.
+
+-   [@Faupi](https://hub.sp-tarkov.com/user/3286-faupi/), for the original [Munitions Expert](https://hub.sp-tarkov.com/files/file/348-munitions-expert-ammo-stats-in-inspect-view/) mod.
+-   [@CWX](https://hub.sp-tarkov.com/user/12898-cwx/), for keeping Faupi's mod updated in [Faupi - Munitions Expert](https://hub.sp-tarkov.com/files/file/554-faupi-munitions-expert/).
+-   [@kikirio](https://hub.sp-tarkov.com/user/3655-kikirio/), for helping integrate this feature into the [Faupi - Munitions Expert](https://hub.sp-tarkov.com/files/file/554-faupi-munitions-expert/) mod.
 
 This mod would not be possible without their work. Send them your love! ♥️
 
 To install:
 
-1. Decompress the contents of the download into the `./user/mods/` directory.  
+1. Decompress the contents of the download into the `./user/mods/` directory.
 2. Open the `EasyAmmunition/config/config.json5` file to adjust configuration options.
 3. Leave a review and let me know what you think.
 

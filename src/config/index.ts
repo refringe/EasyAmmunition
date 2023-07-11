@@ -1,2 +1,2 @@
-export { loadConfiguration } from "./loadConfiguration";
-export { validateConfiguration } from "./validateConfiguration";
+export { loadConfiguration } from './loadConfiguration';
+export { validateConfiguration } from './validateConfiguration';

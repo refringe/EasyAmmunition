@@ -1,10 +1,10 @@
 {
     // Enables the use of the mod.
-    "enabled": true,
+    enabled: true,
 
     // Enables verbose logging.
     // Currently shows each type of ammo, its penetration value, and the background colour it was assigned.
-    "debug": false,
+    debug: false,
 
     // Define background colours based on penetration values.
     //
@@ -17,36 +17,36 @@
     // ORDER MATTERS! The penetration values must be in descending order (highest to lowest).
     //
     // You're free to add or remove penetration levels/colours as you'd like.
-    "penetration": [
+    penetration: [
         {
             // if penetration above 60
-            "minPenetration": 60,
-            "backgroundColor": "red"
+            minPenetration: 60,
+            backgroundColor: 'red',
         },
         {
             // if penetration 50-59
-            "minPenetration": 50,
-            "backgroundColor": "yellow"
+            minPenetration: 50,
+            backgroundColor: 'yellow',
         },
         {
             // if penetration 40-49
-            "minPenetration": 40,
-            "backgroundColor": "violet"
+            minPenetration: 40,
+            backgroundColor: 'violet',
         },
         {
             // if penetration 30-39
-            "minPenetration": 30,
-            "backgroundColor": "blue"
+            minPenetration: 30,
+            backgroundColor: 'blue',
         },
         {
             // if penetration 20-30
-            "minPenetration": 20,
-            "backgroundColor": "green"
+            minPenetration: 20,
+            backgroundColor: 'green',
         },
         {
             // if penetration below 20
-            "minPenetration": 0,
-            "backgroundColor": "black"
-        }
-    ]
+            minPenetration: 0,
+            backgroundColor: 'black',
+        },
+    ],
 }

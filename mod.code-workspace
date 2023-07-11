@@ -1,31 +1,26 @@
 {
-	"folders": [
-		{
-			"path": "."
-		}
-	],
-	"extensions": {
-		"recommendations": [
-			"dbaeumer.vscode-eslint"
-		]
-	},
-	"settings": {
-		"editor.codeActionsOnSave": {
-			"source.fixAll": true
-		},
-		"editor.formatOnSave": true,
-		"eslint.validate": [
-			"javascript",
-			"javascriptreact",
-			"typescript",
-			"typescriptreact"
-		],
-		"eslint.run": "onSave",
-		"[typescript]": {
-			"editor.defaultFormatter": "esbenp.prettier-vscode"
-		},
-		"[typescriptreact]": {
-			"editor.defaultFormatter": "esbenp.prettier-vscode"
-		}
-	}
+    "folders": [
+        {
+            "path": "."
+        }
+    ],
+    "extensions": {
+        "recommendations": [
+            "dbaeumer.vscode-eslint",
+            "esbenp.prettier-vscode"
+        ]
+    },
+    "settings": {
+        "editor.codeActionsOnSave": {
+            "source.fixAll.eslint": true
+        },
+        "editor.formatOnSave": true,
+        "eslint.run": "onSave",
+        "[javascript]": {
+            "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "[typescript]": {
+            "editor.defaultFormatter": "esbenp.prettier-vscode"
+        }
+    }
 }
