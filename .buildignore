@@ -2,11 +2,11 @@
 .github
 .gitlab
 .vscode
-dist
-images
+dist/
+images/
 node_modules/*
 !node_modules/json5
-types
+types/
 .buildignore
 .editorconfig
 .DS_Store

@@ -53,7 +53,7 @@ async function main() {
     );
     logger.log('success', `Created temporary working directory: ${projectDir}`);
 
-    logger.log('info', 'Beginning copy operation...');
+    logger.log('info', 'Beginning copy operation using .buildignore file...');
     await copyFiles(currentDir, projectDir, buildIgnorePatterns);
     logger.log(
         'success',
@@ -65,7 +65,7 @@ async function main() {
         path.dirname(projectDir),
         `${projectName}.zip`
     );
-    await createZipFile(projectDir, zipFilePath);
+    await createZipFile(projectDir, zipFilePath, 'user/mods/' + projectName);
     logger.log('success', `Created package: ${zipFilePath}`);
 
     const zipFileInProjectDir = path.join(projectDir, `${projectName}.zip`);
@@ -171,8 +171,25 @@ async function copyFiles(srcDir, destDir, buildIgnorePatterns) {
             }
 
             if (entry.isDirectory()) {
-                await fs.promises.mkdir(destPath);
-                await copyFiles(srcPath, destPath, buildIgnorePatterns);
+                const subentries = await fs.promises.readdir(srcPath, {
+                    withFileTypes: true,
+                });
+                const containsNonIgnoredFiles = subentries.some(subentry => {
+                    const subentryPath = path.join(srcPath, subentry.name);
+                    const relativeSubentryPath = path.relative(
+                        process.cwd(),
+                        subentryPath
+                    );
+                    return !isIgnored(
+                        relativeSubentryPath,
+                        buildIgnorePatterns
+                    );
+                });
+
+                if (containsNonIgnoredFiles) {
+                    await fs.promises.mkdir(destPath);
+                    await copyFiles(srcPath, destPath, buildIgnorePatterns);
+                }
             } else {
                 await fs.promises.copyFile(srcPath, destPath);
                 logger.log(
@@ -188,19 +205,27 @@ async function copyFiles(srcDir, destDir, buildIgnorePatterns) {
 
 function isIgnored(filePath, buildIgnorePatterns) {
     let shouldBeIgnored = false;
+
     for (const pattern of buildIgnorePatterns) {
         const isNegation = pattern.startsWith('!');
         const regexPattern = isNegation ? pattern.slice(1) : pattern;
-        const regex = new RegExp(regexPattern.replace('*', '.*'));
+        let regex;
+
+        if (regexPattern.endsWith('/')) {
+            regex = new RegExp(regexPattern.replace('*', '.*') + '.*');
+        } else {
+            regex = new RegExp(regexPattern.replace('*', '.*'));
+        }
 
         if (regex.test(filePath)) {
-            shouldBeIgnored = !isNegation;
+            shouldBeIgnored = isNegation ? false : true;
         }
     }
+
     return shouldBeIgnored;
 }
 
-async function createZipFile(directoryToZip, zipFilePath) {
+async function createZipFile(directoryToZip, zipFilePath, containerDirName) {
     return new Promise((resolve, reject) => {
         const output = fs.createWriteStream(zipFilePath);
         const archive = archiver('zip', {
@@ -231,7 +256,7 @@ async function createZipFile(directoryToZip, zipFilePath) {
         });
 
         archive.pipe(output);
-        archive.directory(directoryToZip, false);
+        archive.directory(directoryToZip, containerDirName);
         archive.finalize();
     });
 }
