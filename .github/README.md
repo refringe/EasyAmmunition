@@ -1,7 +1,8 @@
-This is a mod for Single Player Tarkov.  
-https://www.sp-tarkov.com
+# Easy Ammunition
 
-This mod is a streamlined server-side adaptation inspired by [Faupi - Munitions Expert](https://hub.sp-tarkov.com/files/file/554-faupi-munitions-expert/)​. The core concept of this mod is to assign background colours to ammunition items based on their penetration values. By focusing solely on this feature, and writing unique code for it, the mod avoids the need for additional client-side alterations. Additionally, this minimalist approach ensures that the mod remains compatible with SPT for longer without requiring updates every time the game client is updated.
+This is a mod for [Single Player Tarkov](https://www.sp-tarkov.com/).
+
+The core concept of this mod is to assign background colours to ammunition items based on their penetration values. This allows players to quickly identify the best ammunition for their weapon without having to open the ammunition's information panel. This mod is a streamlined server-side adaptation inspired by [Faupi - Munitions Expert](https://hub.sp-tarkov.com/files/file/554-faupi-munitions-expert/)​.
 
 **Vanilla:**  
 ![Before Mod](https://raw.githubusercontent.com/refringe/EasyAmmunition/master/images/Before.png)
@@ -11,20 +12,26 @@ This mod is a streamlined server-side adaptation inspired by [Faupi - Munitions 
 
 _\* Background colours and penetration values can be adjusted._
 
-Big shout-outs to:
+# To install:
 
--   [@Faupi](https://hub.sp-tarkov.com/user/3286-faupi/), for the original [Munitions Expert](https://hub.sp-tarkov.com/files/file/348-munitions-expert-ammo-stats-in-inspect-view/) mod.
--   [@CWX](https://hub.sp-tarkov.com/user/12898-cwx/), for keeping Faupi's mod updated in [Faupi - Munitions Expert](https://hub.sp-tarkov.com/files/file/554-faupi-munitions-expert/).
--   [@kikirio](https://hub.sp-tarkov.com/user/3655-kikirio/), for helping integrate this feature into the [Faupi - Munitions Expert](https://hub.sp-tarkov.com/files/file/554-faupi-munitions-expert/) mod.
-
-This mod would not be possible without their work. Send them your love! ♥️
-
-To install:
-
-1. Decompress the contents of the download into the `./user/mods/` directory.
+1. Decompress the contents of the download into your root SPT directory.
 2. Open the `EasyAmmunition/config/config.json5` file to adjust configuration options.
 3. Leave a review and let me know what you think.
 
 If you experience any problems, please [submit a detailed bug report](https://github.com/refringe/EasyAmmunition/issues).
 
-Enjoy.
+# To Build Locally:
+
+The project has been built in [Visual Studio Code](https://code.visualstudio.com/) (VSC) using [Node.js](https://nodejs.org/). If you are unfamiliar with Node.js, I recommend using [NVM](https://github.com/nvm-sh/nvm). If you do not wish to use NVM, you will need to install the version of Node.js listed within the `.nvmrc` file manually.
+
+This project uses [Prettier](https://prettier.io/) to format code on save. If you are unfamiliar with Prettier, I recommend reading [why I use it](https://prettier.io/docs/en/why-prettier.html).
+
+To build the project locally, using nvm and Prettier:
+
+1. Clone the repository.
+2. Open the `mod.code-workspace` file in Visual Studio Code (VSC).
+3. Install the [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) VSC extension.
+4. Install the [JSON5](https://marketplace.visualstudio.com/items?itemName=mrmlnc.vscode-json5) VSC extension.
+5. Run `nvm use` in the terminal.
+6. Run `npm install` in the terminal.
+7. Run `npm run build` in the terminal.
