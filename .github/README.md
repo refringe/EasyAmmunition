@@ -2,7 +2,7 @@
 
 This is a mod for [Single Player Tarkov](https://www.sp-tarkov.com/).
 
-The core concept of this mod is to assign background colours to ammunition items based on their penetration values. This allows players to quickly identify the best ammunition for their weapon without having to open the ammunition's information panel. This mod is a streamlined server-side adaptation inspired by [Faupi - Munitions Expert](https://hub.sp-tarkov.com/files/file/554-faupi-munitions-expert/)​.
+The core concept of this mod is to assign background colours to ammunition items based on their penetration values. This allows players to quickly identify the best ammunition without having a PHD in ammunition engineering. This mod is a streamlined server-side adaptation of [Faupi - Munitions Expert](https://hub.sp-tarkov.com/files/file/554-faupi-munitions-expert/)​.
 
 **Vanilla:**  
 ![Before Mod](https://raw.githubusercontent.com/refringe/EasyAmmunition/master/images/Before.png)
@@ -22,11 +22,11 @@ If you experience any problems, please [submit a detailed bug report](https://gi
 
 # To Build Locally:
 
-The project has been built in [Visual Studio Code](https://code.visualstudio.com/) (VSC) using [Node.js](https://nodejs.org/). If you are unfamiliar with Node.js, I recommend using [NVM](https://github.com/nvm-sh/nvm). If you do not wish to use NVM, you will need to install the version of Node.js listed within the `.nvmrc` file manually.
+This project has been built in [Visual Studio Code](https://code.visualstudio.com/) (VSC) using [Node.js](https://nodejs.org/). If you are unfamiliar with Node.js, I recommend using [NVM](https://github.com/nvm-sh/nvm) to manage installation and switching versions. If you do not wish to use NVM, you will need to install the version of Node.js listed within the `.nvmrc` file manually.
 
-This project uses [Prettier](https://prettier.io/) to format code on save. If you are unfamiliar with Prettier, I recommend reading [why I use it](https://prettier.io/docs/en/why-prettier.html).
+This project uses [Prettier](https://prettier.io/) to format code on save.
 
-To build the project locally, using nvm and Prettier:
+To build the project locally:
 
 1. Clone the repository.
 2. Open the `mod.code-workspace` file in Visual Studio Code (VSC).
