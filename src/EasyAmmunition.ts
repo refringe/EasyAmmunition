@@ -1,19 +1,22 @@
-import { DependencyContainer } from 'tsyringe';
 import type { IPostDBLoadModAsync } from '@spt-aki/models/external/IPostDBLoadModAsync';
-import { loadConfiguration, validateConfiguration } from './config';
+import { join } from 'path';
+import { DependencyContainer } from 'tsyringe';
 import { adjustAmmunition } from './ammunition';
-import { getLogger } from './utils/logger';
+import { loadConfiguration, validateConfiguration } from './config';
 import type { Configuration } from './types';
+import { getLogger } from './utils/logger';
 
 class EasyAmmunition implements IPostDBLoadModAsync {
     public async postDBLoadAsync(
         container: DependencyContainer
     ): Promise<void> {
         const logger = getLogger(container);
+
+        const configPath = join(__dirname, '../config/config.json5');
         let config: Configuration;
 
         try {
-            config = await loadConfiguration('../../config/config.json5');
+            config = await loadConfiguration(configPath);
             validateConfiguration(config);
         } catch (error: any) {
             logger.log(

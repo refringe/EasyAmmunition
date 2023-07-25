@@ -19,9 +19,19 @@
     // You're free to add or remove penetration levels/colours as you'd like.
     "penetration": [
         {
-            // if penetration above 60
+            // if penetration above 80
+            "minPenetration": 80,
+            "backgroundColor": "violet",
+        },
+        {
+            // if penetration 70-79
+            "minPenetration": 70,
+            "backgroundColor": "blue",
+        },
+        {
+            // if penetration 60-69
             "minPenetration": 60,
-            "backgroundColor": "red",
+            "backgroundColor": "green",
         },
         {
             // if penetration 50-59
@@ -29,24 +39,14 @@
             "backgroundColor": "yellow",
         },
         {
-            // if penetration 40-49
-            "minPenetration": 40,
-            "backgroundColor": "violet",
-        },
-        {
-            // if penetration 30-39
+            // if penetration 30-49
             "minPenetration": 30,
-            "backgroundColor": "blue",
+            "backgroundColor": "red",
         },
         {
-            // if penetration 20-29
-            "minPenetration": 20,
-            "backgroundColor": "green",
-        },
-        {
-            // if penetration below 20
+            // if penetration below 30
             "minPenetration": 0,
-            "backgroundColor": "black",
+            "backgroundColor": "orange",
         },
     ],
 }
