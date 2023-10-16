@@ -1,52 +1,92 @@
 {
-    // Enables the use of the mod.
-    "enabled": true,
+    general: {
+        // Enables the use of the mod.
+        enabled: false,
 
-    // Enables verbose logging.
-    // Currently shows each type of ammo, its penetration value, and the background colour it was assigned.
-    "debug": false,
+        // Disable Colour Converter API. If you have it installed, but don't want this mod to use it, set this to false.
+        // If you don't have it installed, this setting does nothing.
+        useColorConverter: false,
+
+        // Enables verbose logging.
+        // Currently shows each type of ammo, its penetration value, and the background colour it was assigned.
+        debug: true,
+    },
 
     // Define background colours based on penetration values.
     //
-    // There are 11 available background colours:
+    // There are 11 available vanilla background colours:
     // black, blue, default, green, orange, red, tracerGreen, tracerRed, tracerYellow, violet, yellow
-    //
     // Here's what they look like:
     // https://raw.githubusercontent.com/refringe/EasyAmmunition/master/images/BackgroundColours.png
     //
-    // ORDER MATTERS! The penetration values must be in descending order (highest to lowest).
+    // This mod also supports the "Color Converter API" by RaiRaiTheRaichu. This additional client side mod is used to
+    // allow HEX colour values to be used as background colours. Once you have this installed, you can use any HEX
+    // colour value you'd like.
+    // https://hub.sp-tarkov.com/files/file/1509-color-converter-api/
     //
-    // You're free to add or remove penetration levels/colours as you'd like.
-    "penetration": [
+    // If you do not have the Color Converter API installed, only the "start" colour will be used. If you have it
+    // installed, the "end" colour will be used as well, and the ammo background colour will be a gradient between the
+    // two depending on the exact penetration value.
+    penetration: [
         {
-            // if penetration above 60
-            "minPenetration": 60,
-            "backgroundColor": "red",
+            range: {
+                max: 999,
+                min: 60,
+            },
+            colour: {
+                start: "red",
+                end: "#cc3333", // Only used if Color Converter API is installed.
+            },
         },
         {
-            // if penetration 50-59
-            "minPenetration": 50,
-            "backgroundColor": "yellow",
+            range: {
+                max: 59,
+                min: 50,
+            },
+            colour: {
+                start: "yellow",
+                end: "#cccc66",
+            },
         },
         {
-            // if penetration 40-49
-            "minPenetration": 40,
-            "backgroundColor": "violet",
+            range: {
+                max: 49,
+                min: 40,
+            },
+            colour: {
+                start: "violet",
+                end: "#9966cc",
+            },
         },
         {
-            // if penetration 30-39
-            "minPenetration": 30,
-            "backgroundColor": "blue",
+            range: {
+                max: 39,
+                min: 30,
+            },
+            colour: {
+                start: "blue",
+                end: "#0066cc",
+            },
         },
         {
-            // if penetration 20-29
-            "minPenetration": 20,
-            "backgroundColor": "green",
+            range: {
+                max: 29,
+                min: 20,
+            },
+            colour: {
+                start: "green",
+                end: "#66cc00",
+            },
         },
         {
-            // if penetration below 20
-            "minPenetration": 0,
-            "backgroundColor": "black",
+            range: {
+                max: 19,
+                min: 0,
+            },
+            colour: {
+                start: "black",
+                end: "#666666",
+            },
         },
     ],
 }

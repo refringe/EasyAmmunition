@@ -1,26 +1,48 @@
-export const validBackgroundColors = [
-    'black',
-    'blue',
-    'default',
-    'green',
-    'orange',
-    'red',
-    'tracerGreen',
-    'tracerRed',
-    'tracerYellow',
-    'violet',
-    'yellow',
+export type RGB = {
+    r: number;
+    g: number;
+    b: number;
+};
+
+export const validBackgroundColours = [
+    "black",
+    "blue",
+    "default",
+    "green",
+    "orange",
+    "red",
+    "tracerGreen",
+    "tracerRed",
+    "tracerYellow",
+    "violet",
+    "yellow",
 ] as const;
 
-export type BackgroundColor = (typeof validBackgroundColors)[number];
+export type BackgroundColor = (typeof validBackgroundColours)[number];
+export type ExtendedBackgroundColour = BackgroundColor | string; // Extend to include HEX color codes (string)
+
+export type PenetrationRange = {
+    max: number;
+    min: number;
+};
+
+export type ColorGradient = {
+    start: ExtendedBackgroundColour;
+    end: string;
+};
 
 export type PenetrationConfig = {
-    minPenetration: number;
-    backgroundColor: BackgroundColor;
+    range: PenetrationRange;
+    colour: ColorGradient;
+};
+
+export type GeneralSettings = {
+    enabled: boolean;
+    useColorConverter: boolean;
+    debug: boolean;
 };
 
 export type Configuration = {
-    enabled: boolean;
-    debug: boolean;
+    general: GeneralSettings;
     penetration: PenetrationConfig[];
 };

@@ -20,6 +20,11 @@
         "@typescript-eslint/naming-convention": [
             "warn",
             {
+                "selector": "property",
+                "modifiers": ["readonly", "static"],
+                "format": ["UPPER_CASE"]
+            },
+            {
                 "selector": "default",
                 "format": [
                     "camelCase"
