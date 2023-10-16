@@ -24,9 +24,9 @@
     // colour value you'd like.
     // https://hub.sp-tarkov.com/files/file/1509-color-converter-api/
     //
-    // If you do not have the Color Converter API installed, only the "start" colour will be used. If you have it
-    // installed, the "end" colour will be used as well, and the ammo background colour will be a gradient between the
-    // two depending on the exact penetration value.
+    // If you do not have the Color Converter API installed, only the "high" colour will be used. If you have it
+    // installed, the "low" colour will be used as well, and the ammo background colour will be a shade between the two
+    // depending on the exact penetration value.
     penetration: [
         {
             range: {
@@ -34,8 +34,8 @@
                 min: 60,
             },
             colour: {
-                start: "red",
-                end: "#cc3333", // Only used if Color Converter API is installed.
+                high: "red",
+                low: "#cc3333", // Only used if Color Converter API is installed.
             },
         },
         {
@@ -44,8 +44,8 @@
                 min: 50,
             },
             colour: {
-                start: "yellow",
-                end: "#cccc66",
+                high: "yellow",
+                low: "#cccc66",
             },
         },
         {
@@ -54,8 +54,8 @@
                 min: 40,
             },
             colour: {
-                start: "violet",
-                end: "#9966cc",
+                high: "violet",
+                low: "#9966cc",
             },
         },
         {
@@ -64,8 +64,8 @@
                 min: 30,
             },
             colour: {
-                start: "blue",
-                end: "#0066cc",
+                high: "blue",
+                low: "#0066cc",
             },
         },
         {
@@ -74,8 +74,8 @@
                 min: 20,
             },
             colour: {
-                start: "green",
-                end: "#66cc00",
+                high: "green",
+                low: "#66cc00",
             },
         },
         {
@@ -84,8 +84,8 @@
                 min: 0,
             },
             colour: {
-                start: "black",
-                end: "#666666",
+                high: "black",
+                low: "#666",
             },
         },
     ],

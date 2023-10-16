@@ -26,14 +26,14 @@ export type PenetrationRange = {
     min: number;
 };
 
-export type ColorGradient = {
-    start: ExtendedBackgroundColour;
-    end: string;
+export type ColorShade = {
+    high: ExtendedBackgroundColour;
+    low: string;
 };
 
 export type PenetrationConfig = {
     range: PenetrationRange;
-    colour: ColorGradient;
+    colour: ColorShade;
 };
 
 export type GeneralSettings = {

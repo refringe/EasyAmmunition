@@ -31,7 +31,7 @@ export class ConfigSchema {
                         colour: {
                             type: "object",
                             properties: {
-                                start: {
+                                high: {
                                     anyOf: [
                                         {
                                             enum: [
@@ -50,16 +50,16 @@ export class ConfigSchema {
                                         },
                                         {
                                             type: "string",
-                                            pattern: "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$",
+                                            pattern: "^#([A-Fa-f0-9]{6})$",
                                         },
                                     ],
                                 },
-                                end: {
+                                low: {
                                     type: "string",
-                                    pattern: "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$",
+                                    pattern: "^#([A-Fa-f0-9]{6})$",
                                 },
                             },
-                            required: ["start", "end"],
+                            required: ["high", "low"],
                         },
                     },
                     required: ["range", "colour"],
