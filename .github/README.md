@@ -18,18 +18,15 @@ This mod is compatible with [Color Converter API](https://hub.sp-tarkov.com/file
 
 ![With Color Converter API](https://raw.githubusercontent.com/refringe/EasyAmmunition/master/images/ColorConverter.png)
 
-**Easy Ammunition with [Color Converter API](https://hub.sp-tarkov.com/files/file/1509-color-converter-api/) and Realism Configuration:**
-
-![With Color Converter API & Realism Config](https://raw.githubusercontent.com/refringe/EasyAmmunition/master/images/Realism.png)
-
-_\* Background colours and penetration values can be adjusted._
+_All background colours and penetration values can be adjusted._
 
 # To install:
 
 1. Decompress the contents of the download into your root SPT directory.
 2. Open the `EasyAmmunition/config/config.json5` file to adjust configuration options.
     - The configuration file is in **JSON5** format. The file extension is not a mistake. **_Do not rename it!_**
-3. Leave a review and let me know what you think.
+3. Optionally, install [Color Converter API](https://hub.sp-tarkov.com/files/file/1509-color-converter-api/) (highly recommended).
+4. Leave a review and let me know what you think.
 
 If you experience any problems, please [submit a detailed bug report](https://github.com/refringe/EasyAmmunition/issues).
 
