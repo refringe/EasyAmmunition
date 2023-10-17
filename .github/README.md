@@ -14,7 +14,7 @@ This mod is compatible with [Color Converter API](https://hub.sp-tarkov.com/file
 
 ![After Mod](https://raw.githubusercontent.com/refringe/EasyAmmunition/master/images/Default.png)
 
-**Easy Ammunition with [Color Converter API](https://hub.sp-tarkov.com/files/file/1509-color-converter-api/):**
+**Easy Ammunition Default with [Color Converter API](https://hub.sp-tarkov.com/files/file/1509-color-converter-api/):**
 
 ![With Color Converter API](https://raw.githubusercontent.com/refringe/EasyAmmunition/master/images/ColorConverter.png)
 
