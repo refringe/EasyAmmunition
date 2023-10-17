@@ -1,15 +1,15 @@
 {
     general: {
         // Enables the use of the mod.
-        enabled: false,
+        enabled: true,
 
         // Disable Colour Converter API. If you have it installed, but don't want this mod to use it, set this to false.
         // If you don't have it installed, this setting does nothing.
-        useColorConverter: false,
+        useColorConverter: true,
 
         // Enables verbose logging.
         // Currently shows each type of ammo, its penetration value, and the background colour it was assigned.
-        debug: true,
+        debug: false,
     },
 
     // Define background colours based on penetration values.
@@ -35,7 +35,7 @@
             },
             colour: {
                 high: "red",
-                low: "#cc3333", // Only used if Color Converter API is installed.
+                low: "#660000", // Only used if Color Converter API is installed.
             },
         },
         {
@@ -45,7 +45,7 @@
             },
             colour: {
                 high: "yellow",
-                low: "#cccc66",
+                low: "#666600",
             },
         },
         {
@@ -55,7 +55,7 @@
             },
             colour: {
                 high: "violet",
-                low: "#9966cc",
+                low: "#330066",
             },
         },
         {
@@ -65,7 +65,7 @@
             },
             colour: {
                 high: "blue",
-                low: "#0066cc",
+                low: "#003366",
             },
         },
         {
@@ -75,7 +75,7 @@
             },
             colour: {
                 high: "green",
-                low: "#66cc00",
+                low: "#003300",
             },
         },
         {

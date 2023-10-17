@@ -14,16 +14,16 @@ export class AmmunitionAdjuster {
     private readonly BUCKSHOT_TYPE = "buckshot";
     private readonly VANILLA_COLOURS: readonly string[] = validBackgroundColours;
     private readonly VANILLA_COLOUR_TO_HEX: Record<string, string> = {
-        blue: "#003366",
+        blue: "#336699",
         default: "#666666",
-        green: "#336600",
-        orange: "#993300",
-        red: "#660000",
-        tracerGreen: "#00cc00",
+        green: "#336633",
+        orange: "#cc6633",
+        red: "#993333",
+        tracerGreen: "#66ff33",
         tracerRed: "#ff0000",
         tracerYellow: "#ffff00",
-        violet: "#330066",
-        yellow: "#666600",
+        violet: "#9966cc",
+        yellow: "#cccc66",
         black: "#000000",
     };
 
