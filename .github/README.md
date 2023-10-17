@@ -7,15 +7,19 @@ Assign background colours to ammunition items based on their penetration values.
 This mod is compatible with [Color Converter API](https://hub.sp-tarkov.com/files/file/1509-color-converter-api/). This server-side mod will allow you to use hex colour codes to assign background colours. It's highly recommended, but not required.
 
 **Vanilla:**
+
 ![Before Mod](https://raw.githubusercontent.com/refringe/EasyAmmunition/master/images/Vanilla.png)
 
 **Easy Ammunition Default:**
+
 ![After Mod](https://raw.githubusercontent.com/refringe/EasyAmmunition/master/images/Default.png)
 
 **Easy Ammunition with [Color Converter API](https://hub.sp-tarkov.com/files/file/1509-color-converter-api/):**
+
 ![With Color Converter API](https://raw.githubusercontent.com/refringe/EasyAmmunition/master/images/ColorConverter.png)
 
 **Easy Ammunition with [Color Converter API](https://hub.sp-tarkov.com/files/file/1509-color-converter-api/) and Realism Configuration:**
+
 ![With Color Converter API & Realism Config](https://raw.githubusercontent.com/refringe/EasyAmmunition/master/images/Realism.png)
 
 _\* Background colours and penetration values can be adjusted._
