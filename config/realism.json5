@@ -85,7 +85,7 @@
             },
             colour: {
                 high: "orange",
-                low: "#993300",
+                low: "#cc3300",
             },
         },
     ],

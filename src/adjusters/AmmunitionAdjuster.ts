@@ -17,7 +17,7 @@ export class AmmunitionAdjuster {
         blue: "#336699",
         default: "#666666",
         green: "#336633",
-        orange: "#cc6633",
+        orange: "#ff9966",
         red: "#993333",
         tracerGreen: "#66ff33",
         tracerRed: "#ff0000",
