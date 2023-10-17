@@ -24,27 +24,6 @@ export class EasyAmmunition implements IPostDBLoadMod, IPreAkiLoadMod {
         // Resolve the logger and save it to the static logger property for simple access.
         EasyAmmunition.logger = container.resolve<ILogger>("WinstonLogger");
 
-        // Check and store whether Color Converter is available or not.
-        if (EasyAmmunition.config.general.useColorConverter) {
-            EasyAmmunition.colorConverter = this.isColourConverterAvailable();
-            if (EasyAmmunition.colorConverter) {
-                EasyAmmunition.logger.log(
-                    `EasyAmmunition: Color Converter mod installed. Hex colour values are enabled.`,
-                    "cyan"
-                );
-            } else {
-                EasyAmmunition.logger.log(
-                    `EasyAmmunition: Color Converter mod not found. Only vanilla EFT colours are enabled.`,
-                    "yellow"
-                );
-            }
-        } else {
-            EasyAmmunition.logger.log(
-                `EasyAmmunition: Color Converter compatibility has been manually disabled in the configuration file.`,
-                "yellow"
-            );
-        }
-
         // Load and validate the configuration file, saving it to the static config property for simple access.
         try {
             EasyAmmunition.config = new ConfigServer().loadConfig().validateConfig().getConfig();
@@ -64,6 +43,27 @@ export class EasyAmmunition implements IPostDBLoadMod, IPreAkiLoadMod {
         // If the configuration is null at this point we can stop here.
         if (EasyAmmunition.config === null) {
             return;
+        }
+
+        // Check and store whether Color Converter is available or not.
+        if (EasyAmmunition.config.general.useColorConverter) {
+            EasyAmmunition.colorConverter = this.isColourConverterAvailable();
+            if (EasyAmmunition.colorConverter) {
+                EasyAmmunition.logger.log(
+                    `EasyAmmunition: Color Converter mod installed. Hex colour values are enabled.`,
+                    "cyan"
+                );
+            } else {
+                EasyAmmunition.logger.log(
+                    `EasyAmmunition: Color Converter mod not found. Only vanilla EFT colours are enabled.`,
+                    "yellow"
+                );
+            }
+        } else {
+            EasyAmmunition.logger.log(
+                `EasyAmmunition: Color Converter compatibility has been manually disabled in the configuration file.`,
+                "yellow"
+            );
         }
     }
 
