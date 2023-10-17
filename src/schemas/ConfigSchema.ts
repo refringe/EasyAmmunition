@@ -50,13 +50,13 @@ export class ConfigSchema {
                                         },
                                         {
                                             type: "string",
-                                            pattern: "^#([A-Fa-f0-9]{6})$",
+                                            pattern: "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$",
                                         },
                                     ],
                                 },
                                 low: {
                                     type: "string",
-                                    pattern: "^#([A-Fa-f0-9]{6})$",
+                                    pattern: "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$",
                                 },
                             },
                             required: ["high", "low"],

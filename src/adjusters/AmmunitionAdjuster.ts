@@ -110,7 +110,7 @@ export class AmmunitionAdjuster {
     /**
      * Converts a HEX color string to its RGB representation.
      *
-     * This method uses a regular expression to match valid 6-digit HEX color strings.
+     * This method uses a regular expression to match valid 3-digit or 6-digit HEX color strings.
      * If the input string is valid, it splits the string into its R, G, and B components
      * and converts them to their decimal form.
      *
@@ -118,7 +118,12 @@ export class AmmunitionAdjuster {
      * @returns {RGB} An object containing the R, G, and B values in decimal form.
      */
     private hexToRGB(hex: string): RGB {
-        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        let processedHex = hex;
+        // Check if it's a 3-character HEX code
+        if (/^#?([a-f\d])([a-f\d])([a-f\d])$/i.test(hex)) {
+            processedHex = `#${hex[1]}${hex[1]}${hex[2]}${hex[2]}${hex[3]}${hex[3]}`;
+        }
+        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(processedHex);
         return result
             ? {
                   r: parseInt(result[1], 16),
