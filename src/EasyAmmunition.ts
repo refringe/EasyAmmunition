@@ -1,8 +1,8 @@
 import type { IPostDBLoadMod } from "@spt-aki/models/external/IPostDBLoadMod";
 import type { IPreAkiLoadMod } from "@spt-aki/models/external/IPreAkiLoadMod";
 import type { ILogger } from "@spt-aki/models/spt/utils/ILogger";
-import * as fs from "fs";
-import * as path from "path";
+import * as fs from "node:fs";
+import * as path from "node:path";
 import { DependencyContainer } from "tsyringe";
 import { AmmunitionAdjuster } from "./adjusters/AmmunitionAdjuster";
 import { ConfigServer } from "./servers/ConfigServer";
@@ -50,18 +50,18 @@ export class EasyAmmunition implements IPostDBLoadMod, IPreAkiLoadMod {
             EasyAmmunition.colorConverter = this.isColourConverterAvailable();
             if (EasyAmmunition.colorConverter) {
                 EasyAmmunition.logger.log(
-                    `EasyAmmunition: Color Converter mod installed. Hex colour values are enabled.`,
+                    "EasyAmmunition: Color Converter mod installed. Hex colour values are enabled.",
                     "cyan"
                 );
             } else {
                 EasyAmmunition.logger.log(
-                    `EasyAmmunition: Color Converter mod not found. Only vanilla EFT colours are enabled.`,
+                    "EasyAmmunition: Color Converter mod not found. Only vanilla EFT colours are enabled.",
                     "yellow"
                 );
             }
         } else {
             EasyAmmunition.logger.log(
-                `EasyAmmunition: Color Converter compatibility has been manually disabled in the configuration file.`,
+                "EasyAmmunition: Color Converter compatibility has been manually disabled in the configuration file.",
                 "yellow"
             );
         }

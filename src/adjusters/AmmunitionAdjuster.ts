@@ -78,7 +78,7 @@ export class AmmunitionAdjuster {
                 (item._props.ammoType === this.BULLET_TYPE || item._props.ammoType === this.BUCKSHOT_TYPE)
         );
 
-        validItems.forEach(item => {
+        for (const item of validItems) {
             const penetration: number = item._props.PenetrationPower;
 
             try {
@@ -99,7 +99,7 @@ export class AmmunitionAdjuster {
             }
 
             changeCount++;
-        });
+        }
 
         EasyAmmunition.logger.log(
             `EasyAmmunition: Adjusted the background colour of ${changeCount} types of ammunition.`,
@@ -126,9 +126,9 @@ export class AmmunitionAdjuster {
         const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(processedHex);
         return result
             ? {
-                  r: parseInt(result[1], 16),
-                  g: parseInt(result[2], 16),
-                  b: parseInt(result[3], 16),
+                  r: Number.parseInt(result[1], 16),
+                  g: Number.parseInt(result[2], 16),
+                  b: Number.parseInt(result[3], 16),
               }
             : { r: 0, g: 0, b: 0 };
     }
@@ -184,7 +184,7 @@ export class AmmunitionAdjuster {
      * @returns {string} The hexadecimal colour string, prefixed with '#'.
      */
     private RGBToHex(rgb: RGB): string {
-        return "#" + ((1 << 24) + (rgb.r << 16) + (rgb.g << 8) + rgb.b).toString(16).slice(1);
+        return `#${((1 << 24) + (rgb.r << 16) + (rgb.g << 8) + rgb.b).toString(16).slice(1)}`;
     }
 
     /**
