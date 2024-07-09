@@ -1,14 +1,20 @@
-import type { ITemplateItem } from "@spt-aki/models/eft/common/tables/ITemplateItem";
-import type { DatabaseServer } from "@spt-aki/servers/DatabaseServer";
-import { EasyAmmunition } from "../EasyAmmunition";
+import { DependencyContainer } from "tsyringe";
+import type { ITemplateItem } from "@spt/models/eft/common/tables/ITemplateItem";
+import type { DatabaseServer } from "@spt/servers/DatabaseServer";
 import type { ExtendedBackgroundColour, PenetrationConfig, RGB } from "./../types";
 import { validBackgroundColours } from "./../types";
+import { ILogger } from "@spt/models/spt/utils/ILogger";
+import { Configuration } from "../types";
 
 /**
  * The `AmmunitionAdjuster` class is responsible for orchestrating adjustments to game ammunition according to a
  * predefined configuration file.
  */
 export class AmmunitionAdjuster {
+    private container: DependencyContainer;
+    private logger: ILogger;
+    private config: Configuration;
+
     private readonly AMMO_PARENT_NAME = "Ammo";
     private readonly BULLET_TYPE = "bullet";
     private readonly BUCKSHOT_TYPE = "buckshot";
@@ -28,10 +34,12 @@ export class AmmunitionAdjuster {
     };
 
     /**
-     * Make the adjustments to the ammunition once the class is instantiated.
+     * Constructs a new instance of the `AmmunitionAdjuster` class.
      */
-    constructor() {
-        this.adjustBackgroundColour();
+    constructor(container: DependencyContainer, config: Configuration) {
+        this.container = container;
+        this.logger = this.container.resolve<ILogger>("WinstonLogger");
+        this.config = config;
     }
 
     /**
@@ -46,8 +54,8 @@ export class AmmunitionAdjuster {
      *
      * @returns {void}
      */
-    private adjustBackgroundColour(): void {
-        const items: Record<string, ITemplateItem> = EasyAmmunition.container
+    public adjustBackgroundColour(): void {
+        const items: Record<string, ITemplateItem> = this.container
             .resolve<DatabaseServer>("DatabaseServer")
             .getTables().templates.items;
         const itemValues = Object.values(items);
@@ -55,15 +63,15 @@ export class AmmunitionAdjuster {
         // Get the ammunition item parent ID.
         const parentAmmo = itemValues.find(item => item._name === this.AMMO_PARENT_NAME);
         if (!parentAmmo) {
-            EasyAmmunition.logger.log(
+            this.logger.log(
                 "EasyAmmunition: Parent ammo ID not found. Something has gone terribly wrong. No changes made.",
                 "red"
             );
             return;
         }
 
-        if (EasyAmmunition.config.general.debug) {
-            EasyAmmunition.logger.log(`EasyAmmunition: Parent ammo ID found: ${parentAmmo._id}.`, "gray");
+        if (this.config.general.debug) {
+            this.logger.log(`EasyAmmunition: Parent ammo ID found: ${parentAmmo._id}.`, "gray");
         }
 
         let changeCount = 0;
@@ -84,15 +92,15 @@ export class AmmunitionAdjuster {
             try {
                 item._props.BackgroundColor = this.resolveBackgroundColour(
                     penetration,
-                    EasyAmmunition.config.penetration,
-                    EasyAmmunition.colorConverter
+                    this.config.penetration,
+                    this.config.general.canUseColorConverter
                 );
             } catch (e) {
-                EasyAmmunition.logger.log(`EasyAmmunition: ${e.message}`, "red");
+                this.logger.log(`EasyAmmunition: ${e.message}`, "red");
             }
 
-            if (EasyAmmunition.config.general.debug) {
-                EasyAmmunition.logger.log(
+            if (this.config.general.debug) {
+                this.logger.log(
                     `EasyAmmunition: Ammo ${item._name} has pen value of ${penetration}. Set background colour to ${item._props.BackgroundColor}.`,
                     "gray"
                 );
@@ -101,7 +109,7 @@ export class AmmunitionAdjuster {
             changeCount++;
         }
 
-        EasyAmmunition.logger.log(
+        this.logger.log(
             `EasyAmmunition: Adjusted the background colour of ${changeCount} types of ammunition.`,
             "cyan"
         );
@@ -235,7 +243,7 @@ export class AmmunitionAdjuster {
      *
      * @param {number} penetration - The penetration power of the ammunition.
      * @param {PenetrationConfig[]} configuration - Array of objects specifying color ranges for different penetration powers.
-     * @param {boolean} colorConverter - Flag indicating the presence of an external color converter.
+     * @param {boolean} colorConverter - Flag indicating the presence of, and preference to use, Color Converter.
      * @returns {ExtendedBackgroundColour} Returns the calculated background color or defaults to "black".
      */
     private resolveBackgroundColour(
@@ -294,7 +302,7 @@ export class AmmunitionAdjuster {
     ): ExtendedBackgroundColour {
         const { range, colour } = config;
 
-        if (colorConverter && EasyAmmunition.config.general.useColorConverter) {
+        if (colorConverter && this.config.general.useColorConverter) {
             const highColour = this.isVanillaColour(colour.high) ? this.convertVanillaColour(colour.high) : colour.high;
             const amt = (penetration - range.min) / (range.max - range.min);
             return this.interpolateColours(highColour, colour.low, amt).toUpperCase();

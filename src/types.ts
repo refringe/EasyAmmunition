@@ -39,6 +39,7 @@ export type PenetrationConfig = {
 export type GeneralSettings = {
     enabled: boolean;
     useColorConverter: boolean;
+    canUseColorConverter: boolean;
     debug: boolean;
 };
 
