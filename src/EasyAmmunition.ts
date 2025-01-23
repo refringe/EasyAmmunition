@@ -1,8 +1,8 @@
+import * as fs from "node:fs";
+import * as path from "node:path";
 import type { IPostDBLoadMod } from "@spt/models/external/IPostDBLoadMod";
 import type { IPreSptLoadMod } from "@spt/models/external/IPreSptLoadMod";
 import type { ILogger } from "@spt/models/spt/utils/ILogger";
-import * as fs from "node:fs";
-import * as path from "node:path";
 import { DependencyContainer } from "tsyringe";
 import { AmmunitionAdjuster } from "./adjusters/AmmunitionAdjuster";
 import { ConfigServer } from "./servers/ConfigServer";
@@ -21,9 +21,9 @@ class EasyAmmunition implements IPostDBLoadMod, IPreSptLoadMod {
         // Load and validate the configuration file.
         try {
             this.config = new ConfigServer().loadConfig().validateConfig().getConfig();
-        } catch (error: any) {
+        } catch (error: unknown) {
             this.config = null; // Set the config to null so we know it's failed to load or validate.
-            logger.log(`EasyAmmunition: ${error.message}`, "red");
+            logger.log(`EasyAmmunition: ${(error as Error).message}`, "red");
         }
 
         // Set a flag so we know that we shouldn't continue when the postDBLoad method fires... just setting the config
@@ -48,13 +48,13 @@ class EasyAmmunition implements IPostDBLoadMod, IPreSptLoadMod {
             } else {
                 logger.log(
                     "EasyAmmunition: Color Converter mod not found. Only vanilla EFT colours are enabled.",
-                    "yellow"
+                    "yellow",
                 );
             }
         } else {
             logger.log(
                 "EasyAmmunition: Color Converter compatibility has been manually disabled in the configuration file.",
-                "yellow"
+                "yellow",
             );
         }
     }
@@ -81,7 +81,7 @@ class EasyAmmunition implements IPostDBLoadMod, IPreSptLoadMod {
         const pluginDir = path.resolve(__dirname, "..", "..", "..", "..", "BepInEx", "plugins");
 
         try {
-            const pluginList = fs.readdirSync(pluginDir).map(plugin => plugin.toLowerCase());
+            const pluginList = fs.readdirSync(pluginDir).map((plugin) => plugin.toLowerCase());
             return pluginList.includes(pluginName);
         } catch {
             return false;

@@ -1,10 +1,10 @@
-import { DependencyContainer } from "tsyringe";
 import type { ITemplateItem } from "@spt/models/eft/common/tables/ITemplateItem";
+import { ILogger } from "@spt/models/spt/utils/ILogger";
 import type { DatabaseServer } from "@spt/servers/DatabaseServer";
+import { DependencyContainer } from "tsyringe";
+import { Configuration } from "../types";
 import type { ExtendedBackgroundColour, PenetrationConfig, RGB } from "./../types";
 import { validBackgroundColours } from "./../types";
-import { ILogger } from "@spt/models/spt/utils/ILogger";
-import { Configuration } from "../types";
 
 /**
  * The `AmmunitionAdjuster` class is responsible for orchestrating adjustments to game ammunition according to a
@@ -61,11 +61,11 @@ export class AmmunitionAdjuster {
         const itemValues = Object.values(items);
 
         // Get the ammunition item parent ID.
-        const parentAmmo = itemValues.find(item => item._name === this.AMMO_PARENT_NAME);
+        const parentAmmo = itemValues.find((item) => item._name === this.AMMO_PARENT_NAME);
         if (!parentAmmo) {
             this.logger.log(
                 "EasyAmmunition: Parent ammo ID not found. Something has gone terribly wrong. No changes made.",
-                "red"
+                "red",
             );
             return;
         }
@@ -77,13 +77,13 @@ export class AmmunitionAdjuster {
         let changeCount = 0;
 
         const validItems = itemValues.filter(
-            item =>
+            (item) =>
                 item._parent === parentAmmo._id &&
                 item._props?.ammoType &&
                 item._props?.PenetrationPower &&
                 item._props?.BackgroundColor &&
                 !item._name.startsWith("shrapnel") &&
-                (item._props.ammoType === this.BULLET_TYPE || item._props.ammoType === this.BUCKSHOT_TYPE)
+                (item._props.ammoType === this.BULLET_TYPE || item._props.ammoType === this.BUCKSHOT_TYPE),
         );
 
         for (const item of validItems) {
@@ -93,7 +93,7 @@ export class AmmunitionAdjuster {
                 item._props.BackgroundColor = this.resolveBackgroundColour(
                     penetration,
                     this.config.penetration,
-                    this.config.general.canUseColorConverter
+                    this.config.general.canUseColorConverter,
                 );
             } catch (e) {
                 this.logger.log(`EasyAmmunition: ${e.message}`, "red");
@@ -102,7 +102,7 @@ export class AmmunitionAdjuster {
             if (this.config.general.debug) {
                 this.logger.log(
                     `EasyAmmunition: Ammo ${item._name} has pen value of ${penetration}. Set background colour to ${item._props.BackgroundColor}.`,
-                    "gray"
+                    "gray",
                 );
             }
 
@@ -111,7 +111,7 @@ export class AmmunitionAdjuster {
 
         this.logger.log(
             `EasyAmmunition: Adjusted the background colour of ${changeCount} types of ammunition.`,
-            "cyan"
+            "cyan",
         );
     }
 
@@ -249,7 +249,7 @@ export class AmmunitionAdjuster {
     private resolveBackgroundColour(
         penetration: number,
         configuration: PenetrationConfig[],
-        colorConverter: boolean
+        colorConverter: boolean,
     ): ExtendedBackgroundColour {
         const config = this.findConfigurationByPenetration(penetration, configuration);
         if (config) {
@@ -270,7 +270,7 @@ export class AmmunitionAdjuster {
      */
     private findConfigurationByPenetration(
         penetration: number,
-        configuration: PenetrationConfig[]
+        configuration: PenetrationConfig[],
     ): PenetrationConfig | null {
         for (const config of configuration) {
             const { range } = config;
@@ -298,7 +298,7 @@ export class AmmunitionAdjuster {
     private calculateColour(
         penetration: number,
         config: PenetrationConfig,
-        colorConverter: boolean
+        colorConverter: boolean,
     ): ExtendedBackgroundColour {
         const { range, colour } = config;
 
