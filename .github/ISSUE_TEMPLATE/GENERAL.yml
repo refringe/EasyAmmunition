@@ -30,14 +30,14 @@ body:
       label: SPT Version
       description: What version of SPT are you running?
       options:
-        - 3.8.0
+        - "3.11"
     validations:
       required: true
   - type: textarea
     id: server-log
     attributes:
       label: Server Log
-      description: Please paste the *entire* relevant server log (found in `user/logs/` directory) into this field.
+      description: Please paste your entire server log into this input. Be sure to include the beginning where all of your mods, and mod versions, are loaded/listed.
       render: shell
     validations:
       required: true
