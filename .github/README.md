@@ -2,19 +2,15 @@
 
 This is a mod for [Single Player Tarkov](https://www.sp-tarkov.com/).
 
-Assign background colours to ammunition items based on their penetration values. This allows players to quickly identify the best ammunition without having a PHD in ammunition engineering. This mod is a streamlined server-side adaptation of [Faupi - Munitions Expert](https://hub.sp-tarkov.com/files/file/554-faupi-munitions-expert/)​.
+Assign background colours to ammunition items based on their penetration values. This allows players to quickly identify the best ammunition without having a PHD in ammunition engineering. This mod is a streamlined server-side adaptation of [Faupi - Munitions Expert](https://hub.sp-tarkov.com/files/file/554-faupi-munitions-expert/).
 
-This mod is compatible with [Color Converter API](https://hub.sp-tarkov.com/files/file/1509-color-converter-api/). This server-side mod will allow you to use hex colour codes to assign background colours. It's highly recommended, but not required.
+This mod requires [Color Converter API](https://hub.sp-tarkov.com/files/file/1509-color-converter-api/) to be installed.
 
 **Vanilla:**
 
 ![Before Mod](https://raw.githubusercontent.com/refringe/EasyAmmunition/master/images/Vanilla.png)
 
-**Easy Ammunition Default:**
-
-![After Mod](https://raw.githubusercontent.com/refringe/EasyAmmunition/master/images/Default.png)
-
-**Easy Ammunition Default with [Color Converter API](https://hub.sp-tarkov.com/files/file/1509-color-converter-api/):**
+**Easy Ammunition:**
 
 ![With Color Converter API](https://raw.githubusercontent.com/refringe/EasyAmmunition/master/images/ColorConverter.png)
 
@@ -22,26 +18,18 @@ _All background colours and penetration values can be adjusted._
 
 # To install:
 
-1. Decompress the contents of the download into your root SPT directory.
-2. Open the `refringe-easyammunition/config/config.json5` file to adjust configuration options.
-    - The configuration file is in **JSON5** format. The file extension is not a mistake. **_Do not rename it!_**
-3. Optionally, install [Color Converter API](https://hub.sp-tarkov.com/files/file/1509-color-converter-api/) (highly recommended).
-4. Leave a review and let me know what you think.
+1. Install [Color Converter API](https://hub.sp-tarkov.com/files/file/1509-color-converter-api/).
+2. Decompress the contents of the download into your root SPT directory.
+3. Optionally, open the `SPT/user/mods/Refringe-EasyAmmunition/config.json` file to adjust configuration.
+4. Let me know what you think.
 
 If you experience any problems, please [submit a detailed bug report](https://github.com/refringe/EasyAmmunition/issues).
 
 # To Build Locally:
 
-This project has been built in [Visual Studio Code](https://code.visualstudio.com/) (VSC) using [Node.js](https://nodejs.org/). If you are unfamiliar with Node.js, I recommend using [NVM](https://github.com/nvm-sh/nvm) to manage installation and switching versions. If you do not wish to use NVM, you will need to install the version of Node.js listed within the `.nvmrc` file manually.
-
-This project uses [Biome](https://biomejs.dev/) to format code on save.
-
-To build the project locally:
+This project is built with [.NET 9.0](https://dotnet.microsoft.com/).
 
 1. Clone the repository.
-2. Open the `mod.code-workspace` file in Visual Studio Code (VSC).
-3. Install the [Biome](https://marketplace.visualstudio.com/items?itemName=biomejs.biome) VSC extension.
-4. Install the [JSON5](https://marketplace.visualstudio.com/items?itemName=mrmlnc.vscode-json5) VSC extension.
-5. Run `nvm use` in the terminal.
-6. Run `npm install` in the terminal.
-7. Run `npm run build` in the terminal.
+2. Run `dotnet build -c Release` from the project directory.
+3. The build produces `bin/Release/Refringe-EasyAmmunition.zip`.
+4. Extract the zip into your root SPT directory.

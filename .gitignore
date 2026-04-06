@@ -1,4 +1,8 @@
-/dist
-/node_modules
-/src/*.js
-/.DS_Store
+bin/
+obj/
+*.user
+*.suo
+.vs/
+.DS_Store
+*.DotSettings.user
+.idea

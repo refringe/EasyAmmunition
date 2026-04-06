@@ -1,0 +1,32 @@
+{
+    "General": {
+        "Enabled": true,
+        "Debug": false
+    },
+    "Penetration": [
+        {
+            "Range": { "Min": 60, "Max": 999 },
+            "Colour": { "High": "#993333", "Low": "#660000" }
+        },
+        {
+            "Range": { "Min": 50, "Max": 59 },
+            "Colour": { "High": "#CCCC66", "Low": "#666600" }
+        },
+        {
+            "Range": { "Min": 40, "Max": 49 },
+            "Colour": { "High": "#9966CC", "Low": "#330066" }
+        },
+        {
+            "Range": { "Min": 30, "Max": 39 },
+            "Colour": { "High": "#336699", "Low": "#003366" }
+        },
+        {
+            "Range": { "Min": 20, "Max": 29 },
+            "Colour": { "High": "#336633", "Low": "#003300" }
+        },
+        {
+            "Range": { "Min": 0, "Max": 19 },
+            "Colour": { "High": "#666666", "Low": "#000000" }
+        }
+    ]
+}

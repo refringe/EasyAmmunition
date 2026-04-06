@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <RootNamespace>EasyAmmunition</RootNamespace>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <OutputType>Library</OutputType>
+        <Version>2.0.0</Version>
+        <OutputPath>bin\$(Configuration)\</OutputPath>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <ZipOutputPath>bin\$(Configuration)\Refringe-EasyAmmunition.zip</ZipOutputPath>
+        <ModFolder>SPT\user\mods\Refringe-EasyAmmunition</ModFolder>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="SPTarkov.Common" Version="4.0.13" />
+        <PackageReference Include="SPTarkov.DI" Version="4.0.13" />
+        <PackageReference Include="SPTarkov.Server.Core" Version="4.0.13" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Update="config.json" CopyToOutputDirectory="Always" />
+    </ItemGroup>
+
+    <Target Name="PackageZip" AfterTargets="Build">
+        <ItemGroup>
+            <ZipFiles Include="$(OutputPath)EasyAmmunition.dll" TargetPath="$(ModFolder)\EasyAmmunition.dll" />
+            <ZipFiles Include="$(OutputPath)config.json" TargetPath="$(ModFolder)\config.json" />
+        </ItemGroup>
+        <ZipDirectory SourceDirectory="$(OutputPath)" DestinationFile="$(ZipOutputPath)" Overwrite="true" Condition="false" />
+        <Delete Files="$(ZipOutputPath)" Condition="Exists('$(ZipOutputPath)')" />
+        <MakeDir Directories="$(OutputPath)_zip\$(ModFolder)" />
+        <Copy SourceFiles="$(OutputPath)EasyAmmunition.dll" DestinationFiles="$(OutputPath)_zip\$(ModFolder)\EasyAmmunition.dll" />
+        <Copy SourceFiles="$(OutputPath)config.json" DestinationFiles="$(OutputPath)_zip\$(ModFolder)\config.json" />
+        <ZipDirectory SourceDirectory="$(OutputPath)_zip" DestinationFile="$(ZipOutputPath)" Overwrite="true" />
+        <RemoveDir Directories="$(OutputPath)_zip" />
+    </Target>
+
+</Project>
